@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Kanji pattern</title>
+
+        <style>
+            .grid {
+                display: grid;
+                gap: 0%;
+                width: min(50vw, 50vh); 
+                height: min(50vw, 50vh);
+            }
+
+            .background {
+                background-color: black;
+            }
+
+            .color {
+                background-color: white;
+            }
+
+            .cell {
+                border: 1px solid rgb(160 160 160);
+            }
+
+            .layout {
+                margin-top: 50px;
+                display: grid;
+                gap: 10px;
+                grid-template-columns: auto 2fr 1fr;
+                grid-template-rows: 1fr;
+                height: max-content;
+                width: max-content;
+                width: 90vw;
+                height: 80vh;
+                margin: auto;
+            }
+            .layout > div#pattern {
+                overflow: auto;
+                margin-left: 50px;
+            }
+
+            h2 {
+                font-size: 1.5em;
+                margin: 0 5%;
+            }
+            h2 > * {
+                margin: 10px
+            }
+
+            .color-picker {
+                display: grid;
+                gap: 5%;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>
+            <label>Write a Kanji</label>
+            <input type="text" id="entry" style="font-size: 1.2em; text-align: center" size="2em"/>
+        </h2>
+        <div class="layout">
+            <div id="preview">
+
+            </div>
+            <div id="pattern">
+
+            </div>
+            <div class="color-picker">
+                <form name="background">
+                    <fieldset>
+                        <legend>Background color</legend>
+                        <div>
+                            <input type="radio" id="back_black" name="backgroundColor" value="black" checked/>
+                            <label for="back_black">Black</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_white" name="backgroundColor" value="white"/>
+                            <label for="back_white">White</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_red" name="backgroundColor" value="red"/>
+                            <label for="back_red">Red</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_blue" name="backgroundColor" value="blue"/>
+                            <label for="back_blue">Blue</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_green" name="backgroundColor" value="green"/>
+                            <label for="back_green">Green</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_cyan" name="backgroundColor" value="cyan"/>
+                            <label for="back_cyan">Cyan</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_yellow" name="backgroundColor" value="yellow"/>
+                            <label for="back_yellow">Yellow</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_magenta" name="backgroundColor" value="magenta"/>
+                            <label for="back_magenta">Magenta</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_pink" name="backgroundColor" value="pink"/>
+                            <label for="back_pink">Pink</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="back_teal" name="backgroundColor" value="teal"/>
+                            <label for="back_teal">Teal</label>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <form name="character">
+                    <fieldset>
+                        <legend>Character color</legend>
+                        <div>
+                            <input type="radio" id="char_black" name="characterColor" value="black"/>
+                            <label for="char_black">Black</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_white" name="characterColor" value="white" checked/>
+                            <label for="char_white">White</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_red" name="characterColor" value="red"/>
+                            <label for="char_red">Red</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_blue" name="characterColor" value="blue"/>
+                            <label for="char_blue">Blue</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_green" name="characterColor" value="green"/>
+                            <label for="char_green">Green</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_cyan" name="characterColor" value="cyan"/>
+                            <label for="char_cyan">Cyan</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_yellow" name="characterColor" value="yellow"/>
+                            <label for="char_yellow">Yellow</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_magenta" name="characterColor" value="magenta"/>
+                            <label for="char_magenta">Magenta</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_pink" name="characterColor" value="pink"/>
+                            <label for="char_pink">Pink</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="char_teal" name="characterColor" value="teal"/>
+                            <label for="char_teal">Teal</label>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </body>
+
+    <footer>
+        <script>
+            function generatePattern(node, raw_pattern) {
+                raw_pattern.forEach((line, row) => {
+                    let pattern_line = document.createElement("p")
+                    let len = line.reduce((acc, curr) => acc+curr, 0)
+                    pattern_line.innerText = `Rank ${row+1} (${len} sc) :`
+                    line.forEach((suite, index) => {
+                        if (suite != 0) {
+                            pattern_line.innerText += ` (${index%2 ? characterColor : backgroundColor}) ${suite} sc;`
+                        }
+                    })
+                    node.appendChild(pattern_line)
+                })
+            }
+
+            let dico = {}//SPECIALTAG101
+            dico['a'] = [[20], [20], [20], [20], [20], [20], [20], [20], [17, 1, 2], [1, 18, 1], [20], [20], [20], [20], [20], [20], [20], [20], [20], [20]]
+            dico['b'] = [[0, 20], [0, 20], [0, 20], [0, 20], [2, 13, 5, 10], [20], [20], [20], [17, 1, 2], [1, 18, 1], [20], [20], [20], [20], [20], [20], [20], [20], [20], [20]]
+
+            let inp = document.getElementById("entry")
+            let preview = document.getElementById("preview")
+            let pattern = document.getElementById('pattern')
+            let raw_pattern = []
+
+            let backgroundColor = "black"
+            let characterColor = "white"
+
+            let back_color_pickers = document.background.backgroundColor
+            back_color_pickers.forEach((element) => {
+                element.addEventListener('change', (event) => {
+                    backgroundColor = element.value
+                    let backgrounds = document.getElementsByClassName("background")
+                    pattern.textContent = ""
+                    generatePattern(pattern, raw_pattern)
+                    Array.prototype.filter.call(backgrounds, (elt) => {
+                        elt.style["background-color"] = element.value
+                    })
+                })
+            })
+
+            let char_color_pickers = document.character.characterColor
+            char_color_pickers.forEach((element) => {
+                element.addEventListener('change', (event) => {
+                    characterColor = element.value
+                    let characters = document.getElementsByClassName("color")
+                    pattern.textContent = ""
+                    generatePattern(pattern, raw_pattern)
+                    Array.prototype.filter.call(characters, (elt) => {
+                        elt.style["background-color"] = element.value
+                    })
+                })
+            })
+
+            inp.addEventListener('input', (ev) => {
+                console.log(inp.value)
+                if (Object.keys(dico).includes(inp.value)) {
+                    pattern.textContent = ""
+                    preview.textContent = ""
+                    
+                    raw_pattern = dico[inp.value]
+                    let grid = document.createElement('div')
+                    grid.classList.add('grid')
+                    grid.style["grid-template-columns"] = `repeat(${raw_pattern.length}, 1fr)`
+                    grid.style["grid-template-rows"] = `repeat(${raw_pattern.length}, 1fr)`
+                    console.log(raw_pattern)
+                    generatePattern(pattern, raw_pattern)
+                    raw_pattern.forEach((line, row) => {
+                        line.forEach((suite, index) => {
+                            for (let i=0; i<suite; i++) {
+                                let cell = document.createElement("div")
+                                cell.classList.add("cell")
+                                cell.classList.add(index%2 ? "color" : "background")
+                                cell.style.backgroundColor = index%2 ? characterColor : backgroundColor
+                                grid.appendChild(cell)
+                            }
+                        })
+                    })
+                    preview.appendChild(grid)
+                }
+            })
+        </script>
+    </footer>
+</html>
