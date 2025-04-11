@@ -1,14 +1,12 @@
-from fontTools import ttLib
 import os
 from os import walk
 
-import json
-
 import tkinter as tk
 from tkinter import filedialog, ttk
+from fontTools import ttLib
 from PIL import Image, ImageTk, ImageFont, ImageDraw
 
-from doc_treatment import iter_from_file, pattern_from_img, register
+from doc_treatment import iter_from_file, pattern_from_img
 
 isDrawn = False
 
